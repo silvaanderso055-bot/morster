@@ -55,7 +55,7 @@ end
 -- CRIAR GUI PRINCIPAL
 --=====================================================
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "HohoHubMobile"
+ScreenGui.Name = "morster"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.IgnoreGuiInset = false
 ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
@@ -98,7 +98,7 @@ MenuFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
 MenuFrame.BorderSizePixel = 2
 MenuFrame.BorderColor3 = Color3.fromRGB(255, 150, 0)
 MenuFrame.Parent = ScreenGui
-MenuFrame.Visible = false
+MenuFrame.Visible = true
 MenuFrame.ZIndex = 10
 
 local MenuCorner = Instance.new("UICorner")
