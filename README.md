@@ -1,13 +1,12 @@
 --=====================================================
--- BLOX FRUITS - HOHO HUB MOBILE v3.5
--- Interface Flutuante com Botões Táteis
+-- BLOX FRUITS - HOHO HUB MOBILE v3.6
+-- Interface Flutuante - CORRIGIDO PARA MOBILE
 -- 100% Compatível com Executor Mobile
 --=====================================================
 
-local Version = "3.5 Mobile"
+local Version = "3.6 Mobile Fixed"
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
-local UserInputService = game:GetService("UserInputService")
 
 local Player = Players.LocalPlayer
 local Mouse = Player:GetMouse()
@@ -19,26 +18,13 @@ local HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
 -- CONFIGURAÇÕES
 --=====================================================
 local Config = {
-    -- AUTO FARM
     AutoFarm = false,
-    AutoQuest = false,
     AutoAttack = false,
     AutoFruit = false,
-    AutoStats = false,
-    
-    -- PLAYER
     GodMode = false,
-    NoClip = false,
-    WalkSpeed = 16,
-    JumpPower = 50,
-    
-    -- MISC
-    ESP = false,
-    RemoveFog = false,
     AntiAFK = false,
     AntiDetectionEnabled = true,
-    
-    -- ADVANCED
+    WalkSpeed = 16,
     FarmRange = 150,
     AttackRange = 50,
 }
@@ -46,63 +32,59 @@ local Config = {
 --=====================================================
 -- LOGGER
 --=====================================================
-local function Log(message, isSuccess)
-    local prefix = isSuccess and "[✅]" or "[📌]"
-    print(prefix .. " HOHO HUB: " .. message)
+local function Log(msg)
+    print("[HOHO HUB] " .. msg)
 end
 
 --=====================================================
 -- CRIAR GUI PRINCIPAL
 --=====================================================
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "morster"
+ScreenGui.Name = "HohoHubMobile"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.IgnoreGuiInset = false
 ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
 --=====================================================
--- BOTÃO FLUTUANTE PRINCIPAL (ABRIR MENU)
+-- BOTÃO FLUTUANTE PRINCIPAL
 --=====================================================
 local FloatingButton = Instance.new("TextButton")
 FloatingButton.Name = "FloatingButton"
-FloatingButton.Size = UDim2.new(0, 60, 0, 60)
-FloatingButton.Position = UDim2.new(1, -80, 1, -100)
+FloatingButton.Size = UDim2.new(0, 70, 0, 70)
+FloatingButton.Position = UDim2.new(1, -90, 1, -120)
 FloatingButton.BackgroundColor3 = Color3.fromRGB(255, 150, 0)
-FloatingButton.BorderSizePixel = 0
+FloatingButton.BorderSizePixel = 2
+FloatingButton.BorderColor3 = Color3.fromRGB(200, 100, 0)
 FloatingButton.Text = "🔥"
-FloatingButton.TextSize = 30
+FloatingButton.TextSize = 40
 FloatingButton.Font = Enum.Font.GothamBold
 FloatingButton.Parent = ScreenGui
 FloatingButton.Draggable = true
 FloatingButton.Active = true
+FloatingButton.ZIndex = 5
 
--- Arredondar botão flutuante
 local FloatingCorner = Instance.new("UICorner")
 FloatingCorner.CornerRadius = UDim.new(1, 0)
 FloatingCorner.Parent = FloatingButton
 
--- Sombra no botão
-local FloatingShadow = Instance.new("UIStroke")
-FloatingShadow.Color = Color3.fromRGB(200, 100, 0)
-FloatingShadow.Thickness = 2
-FloatingShadow.Parent = FloatingButton
-
 --=====================================================
--- MAIN MENU FRAME
+-- MENU FRAME - GRANDE E VISÍVEL
 --=====================================================
 local MenuFrame = Instance.new("Frame")
 MenuFrame.Name = "MenuFrame"
-MenuFrame.Size = UDim2.new(0, 280, 0, 550)
-MenuFrame.Position = UDim2.new(1, -300, 1, -570)
-MenuFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-MenuFrame.BorderSizePixel = 2
+MenuFrame.Size = UDim2.new(0.9, 0, 0.85, 0) -- 90% da largura, 85% da altura
+MenuFrame.Position = UDim2.new(0.05, 0, 0.08, 0) -- Centralizado
+MenuFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+MenuFrame.BorderSizePixel = 3
 MenuFrame.BorderColor3 = Color3.fromRGB(255, 150, 0)
 MenuFrame.Parent = ScreenGui
-MenuFrame.Visible = true
+MenuFrame.Visible = false
 MenuFrame.ZIndex = 10
+MenuFrame.Draggable = true
+MenuFrame.Active = true
 
 local MenuCorner = Instance.new("UICorner")
-MenuCorner.CornerRadius = UDim.new(0, 10)
+MenuCorner.CornerRadius = UDim.new(0, 15)
 MenuCorner.Parent = MenuFrame
 
 --=====================================================
@@ -110,137 +92,168 @@ MenuCorner.Parent = MenuFrame
 --=====================================================
 local MenuHeader = Instance.new("Frame")
 MenuHeader.Name = "MenuHeader"
-MenuHeader.Size = UDim2.new(1, 0, 0, 50)
+MenuHeader.Size = UDim2.new(1, 0, 0, 60)
 MenuHeader.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 MenuHeader.BorderSizePixel = 0
 MenuHeader.Parent = MenuFrame
+MenuHeader.ZIndex = 11
 
-local MenuHeaderCorner = Instance.new("UICorner")
-MenuHeaderCorner.CornerRadius = UDim.new(0, 10)
-MenuHeaderCorner.Parent = MenuHeader
+local HeaderPadding = Instance.new("UIPadding")
+HeaderPadding.PaddingLeft = UDim.new(0, 15)
+HeaderPadding.PaddingRight = UDim.new(0, 15)
+HeaderPadding.Parent = MenuHeader
 
 local MenuTitle = Instance.new("TextLabel")
-MenuTitle.Size = UDim2.new(1, -40, 1, 0)
+MenuTitle.Size = UDim2.new(1, -80, 1, 0)
 MenuTitle.BackgroundTransparency = 1
-MenuTitle.Text = "🔥 HOHO HUB"
+MenuTitle.Text = "🔥 HOHO HUB - BLOX FRUITS"
 MenuTitle.TextColor3 = Color3.fromRGB(255, 200, 0)
-MenuTitle.TextSize = 16
+MenuTitle.TextSize = 20
 MenuTitle.Font = Enum.Font.GothamBold
 MenuTitle.TextXAlignment = Enum.TextXAlignment.Left
 MenuTitle.Parent = MenuHeader
+MenuTitle.ZIndex = 11
 
--- Botão fechar menu
-local CloseMenuBtn = Instance.new("TextButton")
-CloseMenuBtn.Size = UDim2.new(0, 35, 0, 35)
-CloseMenuBtn.Position = UDim2.new(1, -40, 0.5, -17.5)
-CloseMenuBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
-CloseMenuBtn.BorderSizePixel = 0
-CloseMenuBtn.Text = "X"
-CloseMenuBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-CloseMenuBtn.TextSize = 14
-CloseMenuBtn.Font = Enum.Font.GothamBold
-CloseMenuBtn.Parent = MenuHeader
+-- Botão fechar
+local CloseBtn = Instance.new("TextButton")
+CloseBtn.Name = "CloseBtn"
+CloseBtn.Size = UDim2.new(0, 50, 0, 50)
+CloseBtn.Position = UDim2.new(1, -60, 0.5, -25)
+CloseBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
+CloseBtn.BorderSizePixel = 0
+CloseBtn.Text = "✕"
+CloseBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseBtn.TextSize = 24
+CloseBtn.Font = Enum.Font.GothamBold
+CloseBtn.Parent = MenuHeader
+CloseBtn.ZIndex = 11
 
-local CloseMenuCorner = Instance.new("UICorner")
-CloseMenuCorner.CornerRadius = UDim.new(0, 6)
-CloseMenuCorner.Parent = CloseMenuBtn
+local CloseCorner = Instance.new("UICorner")
+CloseCorner.CornerRadius = UDim.new(0, 8)
+CloseCorner.Parent = CloseBtn
 
-CloseMenuBtn.MouseButton1Click:Connect(function()
+CloseBtn.MouseButton1Click:Connect(function()
     MenuFrame.Visible = false
     FloatingButton.Visible = true
 end)
 
 --=====================================================
--- MENU SCROLL
+-- MENU SCROLL (CONTEÚDO PRINCIPAL)
 --=====================================================
 local MenuScroll = Instance.new("ScrollingFrame")
 MenuScroll.Name = "MenuScroll"
-MenuScroll.Size = UDim2.new(1, 0, 1, -50)
-MenuScroll.Position = UDim2.new(0, 0, 0, 50)
-MenuScroll.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MenuScroll.Size = UDim2.new(1, 0, 1, -60)
+MenuScroll.Position = UDim2.new(0, 0, 0, 60)
+MenuScroll.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 MenuScroll.BorderSizePixel = 0
-MenuScroll.ScrollBarThickness = 4
+MenuScroll.ScrollBarThickness = 8
 MenuScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
 MenuScroll.Parent = MenuFrame
+MenuScroll.ZIndex = 10
+
+local ScrollPadding = Instance.new("UIPadding")
+ScrollPadding.PaddingLeft = UDim.new(0, 15)
+ScrollPadding.PaddingRight = UDim.new(0, 15)
+ScrollPadding.PaddingTop = UDim.new(0, 15)
+ScrollPadding.PaddingBottom = UDim.new(0, 15)
+ScrollPadding.Parent = MenuScroll
 
 local MenuLayout = Instance.new("UIListLayout")
-MenuLayout.Padding = UDim.new(0, 8)
+MenuLayout.Padding = UDim.new(0, 12)
 MenuLayout.SortOrder = Enum.SortOrder.LayoutOrder
 MenuLayout.Parent = MenuScroll
 
 MenuLayout.Changed:Connect(function()
-    MenuScroll.CanvasSize = UDim2.new(0, 0, 0, MenuLayout.AbsoluteContentSize.Y)
+    MenuScroll.CanvasSize = UDim2.new(0, 0, 0, MenuLayout.AbsoluteContentSize.Y + 30)
 end)
 
 --=====================================================
--- FUNÇÕES HELPER
+-- FUNÇÕES HELPER - TOGGLE
 --=====================================================
-local function CreateToggleButton(parent, label, icon, configKey)
+local function CreateToggle(parent, label, icon, configKey)
     local Container = Instance.new("Frame")
-    Container.Size = UDim2.new(1, -16, 0, 40)
-    Container.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    Container.Size = UDim2.new(1, 0, 0, 50)
+    Container.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
     Container.BorderSizePixel = 0
     Container.Parent = parent
+    Container.ZIndex = 10
     
     local Corner = Instance.new("UICorner")
-    Corner.CornerRadius = UDim.new(0, 6)
+    Corner.CornerRadius = UDim.new(0, 8)
     Corner.Parent = Container
     
+    local Padding = Instance.new("UIPadding")
+    Padding.PaddingLeft = UDim.new(0, 12)
+    Padding.PaddingRight = UDim.new(0, 12)
+    Padding.Parent = Container
+    
     local Label = Instance.new("TextLabel")
-    Label.Size = UDim2.new(0, 200, 1, 0)
+    Label.Size = UDim2.new(1, -70, 1, 0)
     Label.BackgroundTransparency = 1
     Label.Text = icon .. " " .. label
-    Label.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Label.TextSize = 12
+    Label.TextColor3 = Color3.fromRGB(220, 220, 220)
+    Label.TextSize = 14
     Label.Font = Enum.Font.Gotham
     Label.TextXAlignment = Enum.TextXAlignment.Left
     Label.Parent = Container
+    Label.ZIndex = 10
     
     local Toggle = Instance.new("TextButton")
-    Toggle.Size = UDim2.new(0, 50, 0, 28)
-    Toggle.Position = UDim2.new(1, -58, 0.5, -14)
-    Toggle.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
+    Toggle.Name = configKey
+    Toggle.Size = UDim2.new(0, 60, 0, 32)
+    Toggle.Position = UDim2.new(1, -65, 0.5, -16)
+    Toggle.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
     Toggle.BorderSizePixel = 0
     Toggle.Text = "OFF"
     Toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Toggle.TextSize = 10
+    Toggle.TextSize = 12
     Toggle.Font = Enum.Font.GothamBold
     Toggle.Parent = Container
+    Toggle.ZIndex = 10
     
     local ToggleCorner = Instance.new("UICorner")
-    ToggleCorner.CornerRadius = UDim.new(0, 4)
+    ToggleCorner.CornerRadius = UDim.new(0, 6)
     ToggleCorner.Parent = Toggle
     
     Toggle.MouseButton1Click:Connect(function()
         Config[configKey] = not Config[configKey]
         Toggle.BackgroundColor3 = Config[configKey] 
-            and Color3.fromRGB(50, 180, 50) 
-            or Color3.fromRGB(80, 80, 80)
+            and Color3.fromRGB(50, 200, 50) 
+            or Color3.fromRGB(100, 100, 100)
         Toggle.Text = Config[configKey] and "ON" or "OFF"
-        Log(label .. ": " .. (Config[configKey] and "✅ ATIVADO" or "❌ DESATIVADO"), true)
+        Log(label .. ": " .. (Config[configKey] and "✅" or "❌"))
     end)
     
     return Container
 end
 
-local function CreateActionButton(parent, label, icon, callback)
+--=====================================================
+-- FUNÇÕES HELPER - BOTÃO
+--=====================================================
+local function CreateButton(parent, label, icon, callback)
     local Button = Instance.new("TextButton")
-    Button.Size = UDim2.new(1, -16, 0, 38)
+    Button.Size = UDim2.new(1, 0, 0, 50)
     Button.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
     Button.BorderSizePixel = 0
     Button.Text = icon .. " " .. label
     Button.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Button.TextSize = 12
+    Button.TextSize = 14
     Button.Font = Enum.Font.GothamBold
     Button.Parent = parent
+    Button.ZIndex = 10
     
     local Corner = Instance.new("UICorner")
-    Corner.CornerRadius = UDim.new(0, 6)
+    Corner.CornerRadius = UDim.new(0, 8)
     Corner.Parent = Button
+    
+    local Padding = Instance.new("UIPadding")
+    Padding.PaddingLeft = UDim.new(0, 12)
+    Padding.PaddingRight = UDim.new(0, 12)
+    Padding.Parent = Button
     
     Button.MouseButton1Click:Connect(function()
         Button.BackgroundColor3 = Color3.fromRGB(40, 120, 40)
-        wait(0.1)
+        wait(0.15)
         Button.BackgroundColor3 = Color3.fromRGB(50, 150, 50)
         
         if callback then
@@ -252,140 +265,90 @@ local function CreateActionButton(parent, label, icon, callback)
 end
 
 --=====================================================
--- ADICIONAR ELEMENTOS AO MENU
+-- FUNÇÕES HELPER - HEADER SEÇÃO
 --=====================================================
-
--- Seção FARM
-local FarmLabel = Instance.new("TextLabel")
-FarmLabel.Size = UDim2.new(1, -16, 0, 25)
-FarmLabel.BackgroundColor3 = Color3.fromRGB(255, 150, 0)
-FarmLabel.BorderSizePixel = 0
-FarmLabel.Text = "⚙️ AUTO FARM"
-FarmLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
-FarmLabel.TextSize = 12
-FarmLabel.Font = Enum.Font.GothamBold
-FarmLabel.Parent = MenuScroll
-
-local FarmCorner = Instance.new("UICorner")
-FarmCorner.CornerRadius = UDim.new(0, 4)
-FarmCorner.Parent = FarmLabel
-
-CreateToggleButton(MenuScroll, "Auto Farm", "🔄", "AutoFarm")
-CreateToggleButton(MenuScroll, "Auto Attack", "⚔️", "AutoAttack")
-CreateToggleButton(MenuScroll, "Auto Fruit", "🍎", "AutoFruit")
-CreateToggleButton(MenuScroll, "Auto Stats", "💪", "AutoStats")
-
-CreateActionButton(MenuScroll, "INICIAR FARM", "▶️", function()
-    Config.AutoFarm = true
-    Config.AutoAttack = true
-    Log("FARM INICIADO! 🚀", true)
-end)
-
-CreateActionButton(MenuScroll, "PARAR FARM", "⏹️", function()
-    Config.AutoFarm = false
-    Config.AutoAttack = false
-    Log("Farm parado!", true)
-end)
-
--- Separador
-local Sep1 = Instance.new("Frame")
-Sep1.Size = UDim2.new(1, -16, 0, 2)
-Sep1.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-Sep1.BorderSizePixel = 0
-Sep1.Parent = MenuScroll
-
--- Seção PLAYER
-local PlayerLabel = Instance.new("TextLabel")
-PlayerLabel.Size = UDim2.new(1, -16, 0, 25)
-PlayerLabel.BackgroundColor3 = Color3.fromRGB(100, 200, 255)
-PlayerLabel.BorderSizePixel = 0
-PlayerLabel.Text = "👤 PLAYER"
-PlayerLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
-PlayerLabel.TextSize = 12
-PlayerLabel.Font = Enum.Font.GothamBold
-PlayerLabel.Parent = MenuScroll
-
-local PlayerCorner = Instance.new("UICorner")
-PlayerCorner.CornerRadius = UDim.new(0, 4)
-PlayerCorner.Parent = PlayerLabel
-
-CreateToggleButton(MenuScroll, "God Mode", "👻", "GodMode")
-CreateToggleButton(MenuScroll, "Anti-AFK", "🏃", "AntiAFK")
-
-CreateActionButton(MenuScroll, "Walk Speed +5", "🏃", function()
-    Config.WalkSpeed = Config.WalkSpeed + 5
-    Humanoid.WalkSpeed = Config.WalkSpeed
-    Log("Walk Speed: " .. Config.WalkSpeed, true)
-end)
-
-CreateActionButton(MenuScroll, "Walk Speed -5", "🐢", function()
-    Config.WalkSpeed = math.max(16, Config.WalkSpeed - 5)
-    Humanoid.WalkSpeed = Config.WalkSpeed
-    Log("Walk Speed: " .. Config.WalkSpeed, true)
-end)
-
--- Separador
-local Sep2 = Instance.new("Frame")
-Sep2.Size = UDim2.new(1, -16, 0, 2)
-Sep2.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-Sep2.BorderSizePixel = 0
-Sep2.Parent = MenuScroll
-
--- Seção TELEPORT
-local TeleportLabel = Instance.new("TextLabel")
-TeleportLabel.Size = UDim2.new(1, -16, 0, 25)
-TeleportLabel.BackgroundColor3 = Color3.fromRGB(150, 100, 255)
-TeleportLabel.BorderSizePixel = 0
-TeleportLabel.Text = "📍 TELEPORT"
-TeleportLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
-TeleportLabel.TextSize = 12
-TeleportLabel.Font = Enum.Font.GothamBold
-TeleportLabel.Parent = MenuScroll
-
-local TeleportCorner = Instance.new("UICorner")
-TeleportCorner.CornerRadius = UDim.new(0, 4)
-TeleportCorner.Parent = TeleportLabel
-
-local Locations = {
-    {name = "Starter Island", pos = Vector3.new(0, 20, 0)},
-    {name = "Colosseum", pos = Vector3.new(100, 50, 100)},
-    {name = "Pirate Village", pos = Vector3.new(-500, 30, 0)},
-    {name = "Desert", pos = Vector3.new(0, 30, -500)},
-}
-
-for _, location in ipairs(Locations) do
-    CreateActionButton(MenuScroll, location.name, "📍", function()
-        HumanoidRootPart.CFrame = CFrame.new(location.pos)
-        Log("Teleportado para " .. location.name, true)
-    end)
+local function CreateSectionHeader(parent, label, color)
+    local Header = Instance.new("TextLabel")
+    Header.Size = UDim2.new(1, 0, 0, 40)
+    Header.BackgroundColor3 = color
+    Header.BorderSizePixel = 0
+    Header.Text = label
+    Header.TextColor3 = Color3.fromRGB(0, 0, 0)
+    Header.TextSize = 14
+    Header.Font = Enum.Font.GothamBold
+    Header.Parent = parent
+    Header.ZIndex = 10
+    
+    local Corner = Instance.new("UICorner")
+    Corner.CornerRadius = UDim.new(0, 8)
+    Corner.Parent = Header
+    
+    return Header
 end
 
--- Separador
-local Sep3 = Instance.new("Frame")
-Sep3.Size = UDim2.new(1, -16, 0, 2)
-Sep3.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-Sep3.BorderSizePixel = 0
-Sep3.Parent = MenuScroll
+--=====================================================
+-- CONTEÚDO DO MENU
+--=====================================================
 
--- Seção MISC
-local MiscLabel = Instance.new("TextLabel")
-MiscLabel.Size = UDim2.new(1, -16, 0, 25)
-MiscLabel.BackgroundColor3 = Color3.fromRGB(200, 100, 100)
-MiscLabel.BorderSizePixel = 0
-MiscLabel.Text = "⚙️ MISC"
-MiscLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
-MiscLabel.TextSize = 12
-MiscLabel.Font = Enum.Font.GothamBold
-MiscLabel.Parent = MenuScroll
+-- SEÇÃO 1: AUTO FARM
+CreateSectionHeader(MenuScroll, "⚙️ AUTO FARM", Color3.fromRGB(255, 150, 0))
+CreateToggle(MenuScroll, "Auto Farm", "🔄", "AutoFarm")
+CreateToggle(MenuScroll, "Auto Attack", "⚔️", "AutoAttack")
+CreateToggle(MenuScroll, "Auto Fruit", "🍎", "AutoFruit")
+CreateButton(MenuScroll, "INICIAR FARM", "▶️", function()
+    Config.AutoFarm = true
+    Config.AutoAttack = true
+    Log("🚀 FARM INICIADO!")
+end)
+CreateButton(MenuScroll, "PARAR FARM", "⏹️", function()
+    Config.AutoFarm = false
+    Config.AutoAttack = false
+    Log("⛔ Farm parado!")
+end)
 
-local MiscCorner = Instance.new("UICorner")
-MiscCorner.CornerRadius = UDim.new(0, 4)
-MiscCorner.Parent = MiscLabel
+-- SEÇÃO 2: PLAYER
+CreateSectionHeader(MenuScroll, "👤 PLAYER", Color3.fromRGB(100, 200, 255))
+CreateToggle(MenuScroll, "God Mode", "👻", "GodMode")
+CreateToggle(MenuScroll, "Anti-AFK", "🏃", "AntiAFK")
+CreateButton(MenuScroll, "Walk Speed +5", "🏃", function()
+    Config.WalkSpeed = Config.WalkSpeed + 5
+    Humanoid.WalkSpeed = Config.WalkSpeed
+    Log("Walk Speed: " .. Config.WalkSpeed)
+end)
+CreateButton(MenuScroll, "Walk Speed -5", "🐢", function()
+    Config.WalkSpeed = math.max(16, Config.WalkSpeed - 5)
+    Humanoid.WalkSpeed = Config.WalkSpeed
+    Log("Walk Speed: " .. Config.WalkSpeed)
+end)
+CreateButton(MenuScroll, "Reset Walk Speed", "🔄", function()
+    Config.WalkSpeed = 16
+    Humanoid.WalkSpeed = 16
+    Log("Walk Speed resetado!")
+end)
 
-CreateToggleButton(MenuScroll, "Anti-Detecção", "🛡️", "AntiDetectionEnabled")
-CreateToggleButton(MenuScroll, "Remove Fog", "🌫️", "RemoveFog")
+-- SEÇÃO 3: TELEPORT
+CreateSectionHeader(MenuScroll, "📍 TELEPORT", Color3.fromRGB(150, 100, 255))
+CreateButton(MenuScroll, "Starter Island", "🏝️", function()
+    HumanoidRootPart.CFrame = CFrame.new(0, 20, 0)
+    Log("Teleportado!")
+end)
+CreateButton(MenuScroll, "Colosseum", "⚔️", function()
+    HumanoidRootPart.CFrame = CFrame.new(100, 50, 100)
+    Log("Teleportado!")
+end)
+CreateButton(MenuScroll, "Pirate Village", "🏴‍☠️", function()
+    HumanoidRootPart.CFrame = CFrame.new(-500, 30, 0)
+    Log("Teleportado!")
+end)
+CreateButton(MenuScroll, "Desert", "🏜️", function()
+    HumanoidRootPart.CFrame = CFrame.new(0, 30, -500)
+    Log("Teleportado!")
+end)
 
-CreateActionButton(MenuScroll, "FECHAR MENU", "❌", function()
+-- SEÇÃO 4: MISC
+CreateSectionHeader(MenuScroll, "⚙️ MISC", Color3.fromRGB(200, 100, 100))
+CreateToggle(MenuScroll, "Anti-Detecção", "🛡️", "AntiDetectionEnabled")
+CreateButton(MenuScroll, "FECHAR MENU", "❌", function()
     MenuFrame.Visible = false
     FloatingButton.Visible = true
 end)
@@ -401,9 +364,7 @@ end)
 --=====================================================
 -- SISTEMA DE AUTO FARM
 --=====================================================
-local FarmSystem = {}
-
-function FarmSystem:GetNearestMob()
+local function GetNearestMob()
     local nearest = nil
     local minDistance = Config.FarmRange
     
@@ -424,7 +385,7 @@ function FarmSystem:GetNearestMob()
     return nearest
 end
 
-function FarmSystem:AttackMob(mob)
+local function AttackMob(mob)
     if not mob or not mob:FindFirstChild("HumanoidRootPart") then return end
     
     local distance = (mob.HumanoidRootPart.Position - HumanoidRootPart.Position).Magnitude
@@ -449,24 +410,23 @@ end
 RunService.Heartbeat:Connect(function()
     if not Character or Humanoid.Health <= 0 then return end
     
-    -- AUTO FARM
     if Config.AutoFarm and Config.AutoAttack then
-        local mob = FarmSystem:GetNearestMob()
+        local mob = GetNearestMob()
         if mob then
-            FarmSystem:AttackMob(mob)
+            AttackMob(mob)
         end
     end
     
-    -- GOD MODE
     if Config.GodMode then
         Humanoid.Health = Humanoid.MaxHealth
     end
     
-    -- ANTI-AFK
+    if Config.WalkSpeed ~= 16 then
+        Humanoid.WalkSpeed = Config.WalkSpeed
+    end
+    
     if Config.AntiAFK then
-        local randomX = math.random(-2, 2) * 0.1
-        local randomZ = math.random(-2, 2) * 0.1
-        HumanoidRootPart.CFrame = HumanoidRootPart.CFrame * CFrame.new(randomX, 0, randomZ)
+        HumanoidRootPart.CFrame = HumanoidRootPart.CFrame * CFrame.new(math.random(-1, 1) * 0.05, 0, math.random(-1, 1) * 0.05)
     end
 end)
 
@@ -477,14 +437,13 @@ Player.CharacterAdded:Connect(function(newCharacter)
     Character = newCharacter
     Humanoid = Character:WaitForChild("Humanoid")
     HumanoidRootPart = Character:WaitForChild("HumanoidRootPart")
-    Log("Personagem respawned!", true)
 end)
 
 --=====================================================
 -- INICIALIZAÇÃO
 --=====================================================
-Log("HOHO HUB Mobile v" .. Version .. " carregado!", true)
-Log("Toque no botão 🔥 para abrir o menu!", true)
-print("=====================================")
-print("🔥 HOHO HUB - BLOX FRUITS MOBILE 🔥")
-print("=====================================")
+Log("✅ HOHO HUB v" .. Version .. " CARREGADO!")
+Log("Toque no botão 🔥 para abrir o menu!")
+print("=".."=".."=".."=".."=".."=".."=".."=".."=".."=".."=")
+print("🔥 HOHO HUB MOBILE - BLOX FRUITS 🔥")
+print("=".."=".."=".."=".."=".."=".."=".."=".."=".."=".."=")
